@@ -1,6 +1,7 @@
 package infra
 
 import (
+	"context"
 	"crud-with-cache/pkg/feedsvc/domain"
 
 	"gorm.io/gorm"
@@ -36,9 +37,9 @@ func toEntities(records []Feed) []domain.Feed {
 	return entities
 }
 
-func (r *mysqlRepo) FindAllByUserID(id uint16) ([]domain.Feed, error) {
+func (r *mysqlRepo) FindAllByUserID(ctx context.Context, userID uint16) ([]domain.Feed, error) {
 	var records []Feed
-	if err := r.db.Where("user_id = ?", id).Find(&records).Error; err != nil {
+	if err := r.db.WithContext(ctx).Where("user_id = ?", userID).Find(&records).Error; err != nil {
 		return nil, err
 	}
 	return toEntities(records), nil
