@@ -20,7 +20,7 @@ func NewFeedUseCase(repo FeedRepository) FeedUseCase {
 }
 
 func (uc *feedUseCase) GetFeeds(ctx context.Context, userID uint16) ([]Feed, error) {
-	return uc.repo.FindAll(ctx, userID)
+	return uc.repo.FindAllByUserID(ctx, userID)
 }
 
 func (uc *feedUseCase) CreateFeed(ctx context.Context, feed Feed) error {
