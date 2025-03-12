@@ -3,14 +3,18 @@ version: "3.8"
 name: crud-with-cache
 
 include:
-    - infra.yml
+  - infra.yml
 
 services:
   app:
     build:
       context: ..
-    env_file:
-
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - app_network
     depends_on:
       - mysql
       - redis
