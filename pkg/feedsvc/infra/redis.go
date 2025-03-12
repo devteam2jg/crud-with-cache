@@ -40,7 +40,23 @@ func (c *cache) Insert(ctx context.Context, feed domain.Feed) error {
 	if e := c.FeedRepository.Insert(ctx, feed); e != nil {
 		return e
 	}
-	c.invalidate(ctx, c.makeKey(feed.UserID))
+	//c.invalidate(ctx, c.makeKey(feed.UserID))
+	return nil
+}
+
+func (c *cache) Update(ctx context.Context, feed domain.Feed) error {
+	if e := c.FeedRepository.Update(ctx, feed); e != nil {
+		return e
+	}
+	//c.invalidate(ctx, c.makeKey(feed.UserID))
+	return nil
+}
+
+func (c *cache) Delete(ctx context.Context, feedID uint16) error {
+	if e := c.FeedRepository.Delete(ctx, feedID); e != nil {
+		return e
+	}
+	//c.invalidate(ctx, c.makeKey(feedID))
 	return nil
 }
 
