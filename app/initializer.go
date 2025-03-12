@@ -4,10 +4,12 @@ import (
 	feedcontroller "crud-with-cache/pkg/feedsvc/controller"
 	feeddomain "crud-with-cache/pkg/feedsvc/domain"
 	feedinfra "crud-with-cache/pkg/feedsvc/infra"
+	"crud-with-cache/router"
 )
 
 type Initializer struct {
-	infra *Infra
+	infra  *Infra
+	Router router.Router
 }
 
 func NewInitializer(infra *Infra) *Initializer {
@@ -15,7 +17,7 @@ func NewInitializer(infra *Infra) *Initializer {
 }
 
 func (i *Initializer) InitFeedService() {
-	mysqlrepo := feedinfra.NewFeedMySQLRepository(i.infra.RDB)
-	usecase := feeddomain.NewFeedUseCase(mysqlrepo)
-	feedcontroller.NewFeedController(usecase)
+	mysqlRepo := feedinfra.NewFeedMySQLRepository(i.infra.RDB)
+	useCase := feeddomain.NewFeedUseCase(mysqlRepo)
+	feedcontroller.NewFeedController(i.Router, useCase)
 }

@@ -4,8 +4,15 @@ func NewServer() {
 
 }
 
-func PacakgeInitializer(i *Infra) {
-	Initializer := NewInitializer(i)
+type Server struct {
+	Infra *Infra
+}
 
+func (s Server) RegisterRouter() {
+	Initializer := NewInitializer(s.Infra)
 	Initializer.InitFeedService()
+}
+
+func MiddlewareInitializer(i *Infra) {
+
 }
