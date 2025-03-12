@@ -1,0 +1,6 @@
+init-dotenv:
+	mkdir -p .env.local
+	find .env.example -type f ! -name '*.md' -exec cp {} .env.local/ \;
+
+build:
+	docker compose -f compose/local.yml build

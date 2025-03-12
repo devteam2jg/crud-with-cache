@@ -1,7 +1,10 @@
 package config
 
 import (
+	"log"
+
 	"github.com/caarlos0/env/v10"
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -23,6 +26,10 @@ type RedisConfig struct {
 }
 
 func LoadConfig() (*Config, error) {
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found")
+	}
+
 	cfg := Config{}
 	if err := env.Parse(&cfg); err != nil {
 		return nil, err
