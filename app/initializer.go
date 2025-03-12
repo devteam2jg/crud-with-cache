@@ -18,6 +18,7 @@ func NewInitializer(infra *Infra, router router.Router) *Initializer {
 
 func (i *Initializer) InitFeedService() {
 	mysqlRepo := feedinfra.NewFeedMySQLRepository(i.infra.RDB)
-	useCase := feeddomain.NewFeedUseCase(mysqlRepo)
+	cacheRepo := feedinfra.NewFeedCache(mysqlRepo, i.infra.Redis)
+	useCase := feeddomain.NewFeedUseCase(cacheRepo)
 	feedcontroller.NewFeedController(i.Router, useCase)
 }
