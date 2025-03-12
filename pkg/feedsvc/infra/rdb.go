@@ -3,6 +3,7 @@ package infra
 import (
 	"context"
 	"crud-with-cache/pkg/feedsvc/domain"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -16,11 +17,11 @@ type mysqlRepo struct {
 }
 
 type Feed struct {
-	ID      uint16 `gorm:"primaryKey"`
-	UserID  uint16
-	Title   string
-	Content string
-	ImgURL  []string
+	ID      uint16   `gorm:"primaryKey;column:id"`
+	UserID  uint16   `gorm:"column:user_id"`
+	Title   string   `gorm:"column:title"`
+	Content string   `gorm:"column:content"`
+	ImgURL  []string `gorm:"column:img_url"`
 }
 
 func toEntities(records []Feed) []domain.Feed {
@@ -35,6 +36,31 @@ func toEntities(records []Feed) []domain.Feed {
 		})
 	}
 	return entities
+}
+
+func (Feed) TableName() string {
+	return "feeds"
+}
+
+func (f Feed) toEntity() *domain.Feed {
+	return &domain.Feed{
+		ID:      f.ID,
+		UserID:  f.UserID,
+		Title:   f.Title,
+		Content: f.Content,
+		ImgURL:  f.ImgURL,
+	}
+}
+
+func (r *mysqlRepo) FindOneByID(ctx context.Context, id uint16) (*domain.Feed, error) {
+	var record Feed
+	if err := r.db.WithContext(ctx).First(&record, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, domain.ErrFeedNotFound
+		}
+		return nil, err
+	}
+	return record.toEntity(), nil
 }
 
 func (r *mysqlRepo) FindAllByUserID(ctx context.Context, userID uint16) ([]domain.Feed, error) {

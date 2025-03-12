@@ -10,6 +10,9 @@ import (
 
 type FeedController interface {
 	GetFeeds(c echo.Context) error
+	CreateFeed(c echo.Context) error
+	UpdateFeed(c echo.Context) error
+	DeleteFeed(c echo.Context) error
 }
 
 func NewFeedController(e router.Router, feedUseCase domain.FeedUseCase) FeedController {

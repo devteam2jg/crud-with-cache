@@ -36,6 +36,14 @@ func (c *cache) FindAllByUserID(ctx context.Context, userID uint16) ([]domain.Fe
 	return feeds, nil
 }
 
+func (c *cache) Insert(ctx context.Context, feed domain.Feed) error {
+	if e := c.FeedRepository.Insert(ctx, feed); e != nil {
+		return e
+	}
+	c.invalidate(ctx, c.makeKey(feed.UserID))
+	return nil
+}
+
 func (c *cache) fetch(ctx context.Context, key string) []domain.Feed {
 	b, e := c.redis.Get(ctx, key).Bytes()
 	if errors.Is(e, redis.Nil) {
@@ -59,6 +67,12 @@ func (c *cache) store(ctx context.Context, key string, feeds []domain.Feed) {
 		//todo log
 	}
 	if e := c.redis.SetNX(ctx, key, buf.String(), 0).Err(); e != nil {
+		//todo log
+	}
+}
+
+func (c *cache) invalidate(ctx context.Context, key string) {
+	if e := c.redis.Del(ctx, key).Err(); e != nil {
 		//todo log
 	}
 }
