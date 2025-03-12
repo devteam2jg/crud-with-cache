@@ -1,4 +1,4 @@
 package domain
 
-type Repository interface {
+type FeedRepository interface {
 }

@@ -1,4 +1,4 @@
-package server
+package app
 
 import (
 	"github.com/redis/go-redis/v9"
