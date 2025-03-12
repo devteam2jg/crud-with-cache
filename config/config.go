@@ -26,7 +26,7 @@ type RedisConfig struct {
 }
 
 func LoadConfig() (*Config, error) {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("./.env.local/crud"); err != nil {
 		log.Println("No .env file found")
 	}
 

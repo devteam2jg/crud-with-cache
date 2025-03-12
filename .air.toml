@@ -1,0 +1,11 @@
+root = "."
+tmp_dir = "./.air.toml" # Not to make temporary directory
+
+[build]
+cmd = " " # skip build, we are using `run` command
+full_bin = "go run ./"
+delay = 500 # ms
+include_ext = ["go"]
+include_file = ["go.sum"]
+include_dir = ["internal", "app", "config", "pkg"]
+exclude_regex = ["_test\\.go"]

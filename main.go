@@ -1,6 +1,7 @@
-package app
+package main
 
 import (
+	"crud-with-cache/app"
 	"crud-with-cache/config"
 	"fmt"
 
@@ -13,11 +14,11 @@ func main() {
 		panic("failed to load config")
 	}
 
-	infra, err := NewInfra(cfg)
+	infra, err := app.NewInfra(cfg)
 	if err != nil {
 		panic(fmt.Sprintf("failed to initialize infra: %v", err))
 	}
-	server := NewServer(infra)
+	server := app.NewServer(infra)
 
 	e := echo.New()
 	server.RegisterRouter(e)

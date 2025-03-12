@@ -7,6 +7,7 @@ include:
 
 services:
   app:
+    working_dir: /app
     build:
       context: ..
       dockerfile: Dockerfile
@@ -15,6 +16,9 @@ services:
     restart: always
     networks:
       - app_network
+    volumes:
+      - "..:/app:delegated"
+    command: air -build.poll true
     depends_on:
       - mysql
       - redis

@@ -13,3 +13,6 @@ up:
 
 up-app:
 	docker compose -f compose/local.yml up app
+
+down:
+	docker compose -f compose/local.yml down --remove-orphans
