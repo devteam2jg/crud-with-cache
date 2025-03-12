@@ -44,3 +44,26 @@ func (r *mysqlRepo) FindAllByUserID(ctx context.Context, userID uint16) ([]domai
 	}
 	return toEntities(records), nil
 }
+
+func (r *mysqlRepo) Insert(ctx context.Context, feed domain.Feed) error {
+	return r.db.WithContext(ctx).Create(&Feed{
+		UserID:  feed.UserID,
+		Title:   feed.Title,
+		Content: feed.Content,
+		ImgURL:  feed.ImgURL,
+	}).Error
+}
+
+func (r *mysqlRepo) Update(ctx context.Context, feed domain.Feed) error {
+	return r.db.WithContext(ctx).Save(&Feed{
+		ID:      feed.ID,
+		UserID:  feed.UserID,
+		Title:   feed.Title,
+		Content: feed.Content,
+		ImgURL:  feed.ImgURL,
+	}).Error
+}
+
+func (r *mysqlRepo) Delete(ctx context.Context, feedID uint16) error {
+	return r.db.WithContext(ctx).Delete(&Feed{}, feedID).Error
+}
