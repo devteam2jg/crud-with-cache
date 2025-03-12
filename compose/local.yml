@@ -9,8 +9,6 @@ services:
   app:
     build:
       context: ..
-      args:
-        GITHUB_TOKEN: "${BUILD_GITHUB_TOKEN}"
     env_file:
 
     depends_on:
