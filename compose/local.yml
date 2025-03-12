@@ -12,3 +12,7 @@ services:
       args:
         GITHUB_TOKEN: "${BUILD_GITHUB_TOKEN}"
     env_file:
+
+    depends_on:
+      - mysql
+      - redis
