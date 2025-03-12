@@ -12,8 +12,8 @@ type Initializer struct {
 	Router router.Router
 }
 
-func NewInitializer(infra *Infra) *Initializer {
-	return &Initializer{infra: infra}
+func NewInitializer(infra *Infra, router router.Router) *Initializer {
+	return &Initializer{infra: infra, Router: router}
 }
 
 func (i *Initializer) InitFeedService() {

@@ -9,7 +9,3 @@ type FeedRepository interface {
 	Update(ctx context.Context, feed Feed) error
 	Delete(ctx context.Context, feedID uint16) error
 }
-
-type FeedRepositoryFindOption struct {
-	UserID uint16
-}

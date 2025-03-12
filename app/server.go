@@ -1,15 +1,19 @@
 package app
 
-func NewServer() {
+import "crud-with-cache/router"
 
+func NewServer(infra *Infra) *Server {
+	return &Server{
+		Infra: infra,
+	}
 }
 
 type Server struct {
 	Infra *Infra
 }
 
-func (s Server) RegisterRouter() {
-	Initializer := NewInitializer(s.Infra)
+func (s Server) RegisterRouter(router router.Router) {
+	Initializer := NewInitializer(s.Infra, router)
 	Initializer.InitFeedService()
 }
 
