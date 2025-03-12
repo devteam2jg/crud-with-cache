@@ -5,6 +5,8 @@ go 1.24.0
 require gorm.io/gorm v1.25.12
 
 require (
+	github.com/caarlos0/env/v10 v10.0.0 // indirect
+	github.com/caarlos0/env/v6 v6.10.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect

@@ -2,14 +2,21 @@ package app
 
 import (
 	"crud-with-cache/config"
+	"fmt"
 
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
-	config := config.Config{}
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		panic("failed to load config")
+	}
 
-	infra := NewInfra(config)
+	infra, err := NewInfra(cfg)
+	if err != nil {
+		panic(fmt.Sprintf("failed to initialize infra: %v", err))
+	}
 	server := NewServer(infra)
 
 	e := echo.New()

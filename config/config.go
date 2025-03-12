@@ -1,5 +1,9 @@
 package config
 
+import (
+	"github.com/caarlos0/env/v10"
+)
+
 type Config struct {
 	MySQL MySQLConfig
 	Redis RedisConfig
@@ -16,4 +20,12 @@ type MySQLConfig struct {
 type RedisConfig struct {
 	Host string `env:"REDIS_HOST" `
 	Port int    `env:"REDIS_PORT"`
+}
+
+func LoadConfig() (*Config, error) {
+	cfg := Config{}
+	if err := env.Parse(&cfg); err != nil {
+		return nil, err
+	}
+	return &cfg, nil
 }
