@@ -22,10 +22,9 @@ services:
     env_file:
       - ../.env.local/crud
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=mydb
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     restart: always
     networks:
       - app_network
