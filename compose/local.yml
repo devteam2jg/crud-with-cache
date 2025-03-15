@@ -18,7 +18,7 @@ services:
       - app_network
     volumes:
       - "..:/app:delegated"
-    command: air -build.poll true
+    command: air -build.poll true -c ./app/crud/main/.air.toml
     depends_on:
       mysql:
         condition: service_healthy

@@ -1,4 +1,4 @@
-package app
+package crud
 
 import (
 	commentcontroller "crud-with-cache/pkg/comment/controller"
@@ -21,13 +21,15 @@ func NewInitializer(infra *Infra, router router.Router) *Initializer {
 
 func (i *Initializer) InitFeedService() {
 	mysqlRepo := feedinfra.NewMySQLRepository(i.infra.RDB)
-	cacheRepo := feedinfra.NewCache(mysqlRepo, i.infra.Redis)
+	cacheRepo := feedinfra.NewCache(mysqlRepo, i.infra.Cache)
 	useCase := feeddomain.NewFeedUseCase(cacheRepo)
 	feedcontroller.NewFeedController(i.Router, useCase)
 }
 
 func (i *Initializer) InitCommentService() {
 	mysqlRepo := commentinfra.NewMySQLRepository(i.infra.RDB)
-	useCase := commentdomain.NewCommentUseCase(mysqlRepo)
+	redisBuffer := commentinfra.NewBuffer(mysqlRepo, i.infra.Buffer)
+	redisCache := commentinfra.NewCache(redisBuffer, i.infra.Cache)
+	useCase := commentdomain.NewCommentUseCase(redisCache)
 	commentcontroller.NewCommentController(i.Router, useCase)
 }

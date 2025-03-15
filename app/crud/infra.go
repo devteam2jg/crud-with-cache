@@ -1,4 +1,4 @@
-package app
+package crud
 
 import (
 	"context"
@@ -12,8 +12,9 @@ import (
 )
 
 type Infra struct {
-	RDB   *gorm.DB
-	Redis redis.UniversalClient
+	RDB    *gorm.DB
+	Cache  redis.UniversalClient
+	Buffer redis.UniversalClient
 }
 
 func NewInfra(cfg *config.Config) (*Infra, error) {
@@ -26,18 +27,25 @@ func NewInfra(cfg *config.Config) (*Infra, error) {
 		return nil, errors.Join(fmt.Errorf("failed to connect to mysql"), err)
 	}
 
-	redisAddr := fmt.Sprintf("%s:%d", cfg.Redis.Host, cfg.Redis.Port)
-	redisClient := redis.NewClient(&redis.Options{
-		Addr: redisAddr,
+	cache := redis.NewClient(&redis.Options{
+		Addr: fmt.Sprintf("%s:%d", cfg.Cached.Host, cfg.Cached.Port),
 	})
+	_, err = cache.Ping(context.Background()).Result()
+	if err != nil {
+		return nil, errors.Join(fmt.Errorf("failed to connect to redis"), err)
+	}
 
-	_, err = redisClient.Ping(context.Background()).Result()
+	buffer := redis.NewClient(&redis.Options{
+		Addr: fmt.Sprintf("%s:%d", cfg.Buffer.Host, cfg.Buffer.Port),
+	})
+	_, err = buffer.Ping(context.Background()).Result()
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed to connect to redis"), err)
 	}
 
 	return &Infra{
-		RDB:   rdb,
-		Redis: redisClient,
+		RDB:    rdb,
+		Cache:  cache,
+		Buffer: buffer,
 	}, nil
 }

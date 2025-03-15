@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	MySQL MySQLConfig
-	Redis RedisConfig
+	MySQL  MySQLConfig
+	Cached CacheConfig
+	Buffer BufferConfig
 }
 
 type MySQLConfig struct {
@@ -20,9 +21,14 @@ type MySQLConfig struct {
 	DBName   string `env:"MYSQL_DBNAME"`
 }
 
-type RedisConfig struct {
-	Host string `env:"REDIS_HOST" `
-	Port int    `env:"REDIS_PORT"`
+type CacheConfig struct {
+	Host string `env:"REDIS_CACHE_HOST" `
+	Port int    `env:"REDIS_CACHE_PORT"`
+}
+
+type BufferConfig struct {
+	Host string `env:"REDIS_BUFFER_HOST" `
+	Port int    `env:"REDIS_BUFFER_PORT"`
 }
 
 func LoadConfig() (*Config, error) {
