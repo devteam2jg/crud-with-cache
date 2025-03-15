@@ -29,7 +29,7 @@ func (uc *commentUseCase) PostComment(ctx context.Context, dto PostCommentDto) e
 	return uc.repo.InsertComment(ctx, Comment{
 		OwnerID: dto.UserID,
 		FeedID:  dto.FeedID,
-		Content: dto.Comment,
+		Content: dto.Content,
 	})
 }
 
@@ -38,6 +38,7 @@ func (uc *commentUseCase) UpdateComment(ctx context.Context, dto UpdatedCommentD
 		ID:      dto.CommentID,
 		OwnerID: dto.UserID,
 		FeedID:  dto.FeedID,
+		Content: dto.Content,
 	})
 }
 

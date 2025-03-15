@@ -70,7 +70,7 @@ func (con *commentController) PostComment(c echo.Context) error {
 	err := con.useCase.PostComment(ctx, domain.PostCommentDto{
 		FeedID:  req.FeedID,
 		UserID:  req.UserID,
-		Comment: req.Comment,
+		Content: req.Content,
 	})
 	//todo make response code more specific
 	if err != nil {
@@ -103,7 +103,7 @@ func (con *commentController) PutComment(c echo.Context) error {
 		FeedID:    req.FeedID,
 		CommentID: req.CommentID,
 		UserID:    req.UserID,
-		Comment:   req.Comment,
+		Content:   req.Content,
 	})
 	//todo make response code more specific
 	if err != nil {

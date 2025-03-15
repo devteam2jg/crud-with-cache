@@ -13,14 +13,14 @@ type GetCommentsResponse struct {
 type PostCommentRequest struct {
 	FeedID  uint16 `param:"feed_id"`
 	UserID  uint16 `json:"user_id"`
-	Comment string `json:"comment"`
+	Content string `json:"content"`
 }
 
 type PutCommentRequest struct {
 	FeedID    uint16 `param:"feed_id"`
 	CommentID uint   `param:"comment_id"`
 	UserID    uint16 `json:"user_id"`
-	Comment   string `json:"comment"`
+	Content   string `json:"content"`
 }
 
 type DeleteCommentRequest struct {
