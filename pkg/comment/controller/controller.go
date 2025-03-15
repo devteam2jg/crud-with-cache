@@ -64,7 +64,7 @@ func (con *commentController) PostComment(c echo.Context) error {
 	if req.UserID == 0 {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Missing json: user_id"}
 	}
-	if req.Comment == "" {
+	if req.Content == "" {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Missing json: comment"}
 	}
 	err := con.useCase.PostComment(ctx, domain.PostCommentDto{
@@ -96,7 +96,7 @@ func (con *commentController) PutComment(c echo.Context) error {
 	if req.UserID == 0 {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Missing json: user_id"}
 	}
-	if req.Comment == "" {
+	if req.Content == "" {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Missing json: comment"}
 	}
 	err := con.useCase.UpdateComment(ctx, domain.UpdatedCommentDto{
