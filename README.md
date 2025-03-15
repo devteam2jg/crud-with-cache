@@ -39,3 +39,72 @@ make init-dotenv    # Set env
 make up    # Init application
 ```
 
+
+## API Spec
+### Feed
++ **GET** /api/user/{user_id}/feeds
+    + 게시글 목록 조회
++ **POST** /api/user/{user_id}/feed
+    + 게시글 작성
+    + Request Body
+    ```json
+    {   
+        "title" : "string",
+        "content": "string",
+        "image_urls": ["string"]
+    }
+    ```
++ **PUT** /api/user/{user_id}/feed/{feed_id}
+    + 게시글 수정
+    + Request Body
+    ```json
+    {   
+        "title" : "string",
+        "content": "string",
+        "image_urls": ["string"]
+    }
+    ```
++ **DELETE** /api/user/{user_id}/feed/{feed_id}
+    + 게시글 삭제
+
++ **POST** /api/feed/test
+    + 테스트 게시글 작성
+    
+### Comment
++ **GET** /api/feed/{feed_id}/comments
+    + 댓글 목록 조회
++ **POST** /api/feed/{feed_id}/comment
+    + 댓글 작성
+    + Request Body
+        ```json
+        {   
+            "user_id" : "string",
+            "content": "string"
+        }
+        ```
++ **PUT** /api/feed/{feed_id}/comment/{comment_id}
+    + 댓글 수정
+    + Request Body
+      ```json
+      {   
+          "user_id" : "string",
+          "content": "string"
+      }
+      ```
++ **DELETE** /api/feed/{feed_id}/comment/{comment_id}
+    + 댓글 삭제
+    + Request Body
+      ```json
+      {   
+          "user_id" : "string"
+      }
+      ```
++ **POST** /api/comment/test
+  + 테스트 댓글 작성
+
+## Test
+아래 URL을 이용해 테스트 가능 
++ [게시글 작성](http://localhost:8080/api/feed/test)   
++ [게시글 조회](http://localhost:8080/api/user/1/feeds)
++ [댓글 작성](http://localhost:8080/api/comment/test)
++ [댓글 조회](http://localhost:8080/api/feed/1/comments)

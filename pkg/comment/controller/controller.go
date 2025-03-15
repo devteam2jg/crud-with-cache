@@ -31,6 +31,7 @@ func NewCommentController(e router.Router, useCase domain.CommentUseCase) Commen
 	e.PUT("/api/feed/:feed_id/comment/:comment_id", ctrl.PutComment)
 	e.DELETE("/api/feed/:feed_id/comment/:comment_id", ctrl.DeleteComment)
 
+	e.POST("/api/comment/test", ctrl.testComment)
 	return ctrl
 }
 
@@ -137,6 +138,19 @@ func (con *commentController) DeleteComment(c echo.Context) error {
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusInternalServerError,
 			Message: "Unexpected error: failed to delete comment"}
+	}
+	return c.NoContent(http.StatusNoContent)
+}
+
+func (con *commentController) testComment(c echo.Context) error {
+	ctx := c.Request().Context()
+	if err := con.useCase.PostComment(ctx, domain.PostCommentDto{
+		FeedID:  1,
+		UserID:  1,
+		Content: "insert sample data",
+	}); err != nil {
+		return &echo.HTTPError{Code: http.StatusInternalServerError,
+			Message: "Unexpected error: failed to insert sample data"}
 	}
 	return c.NoContent(http.StatusNoContent)
 }

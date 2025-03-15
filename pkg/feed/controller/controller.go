@@ -26,6 +26,8 @@ func NewFeedController(e router.Router, feedUseCase domain.FeedUseCase) FeedCont
 	e.PUT("/api/user/:user_id/feed", ctrl.UpdateFeed)
 	e.DELETE("/api/user/:user_id/feed", ctrl.DeleteFeed)
 
+	e.POST("/api/comment/test", ctrl.testFeed)
+
 	return ctrl
 }
 
@@ -84,6 +86,20 @@ func (con *controller) DeleteFeed(c echo.Context) error {
 	}
 	if err := con.feedUseCase.DeleteFeed(ctx, req.userID); err != nil {
 		return &echo.HTTPError{Code: http.StatusInternalServerError, Message: "Unexpected error: failed to delete feed"}
+	}
+	return c.NoContent(http.StatusNoContent)
+}
+
+func (con *controller) testFeed(c echo.Context) error {
+	ctx := c.Request().Context()
+	if err := con.feedUseCase.CreateFeed(ctx, domain.Feed{
+		UserID:  1,
+		Title:   "test",
+		Content: "test",
+		ImgURL:  []string{"test"},
+	}); err != nil {
+		return &echo.HTTPError{Code: http.StatusInternalServerError,
+			Message: "Unexpected error: failed to post comment"}
 	}
 	return c.NoContent(http.StatusNoContent)
 }
