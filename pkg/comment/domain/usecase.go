@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"time"
 )
 
 type CommentUseCase interface {
@@ -27,9 +28,10 @@ func (uc *commentUseCase) GetComments(ctx context.Context, feedID uint16) ([]Com
 
 func (uc *commentUseCase) PostComment(ctx context.Context, dto PostCommentDto) error {
 	return uc.repo.InsertComment(ctx, Comment{
-		OwnerID: dto.UserID,
-		FeedID:  dto.FeedID,
-		Content: dto.Content,
+		OwnerID:    dto.UserID,
+		FeedID:     dto.FeedID,
+		Content:    dto.Content,
+		BufferedAt: time.Now(),
 	})
 }
 

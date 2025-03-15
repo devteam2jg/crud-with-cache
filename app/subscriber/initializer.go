@@ -1,8 +1,7 @@
 package subscriber
 
 import (
-	commentcontroller "crud-with-cache/pkg/comment/controller"
-	commentdomain "crud-with-cache/pkg/comment/domain"
+	"context"
 	commentinfra "crud-with-cache/pkg/comment/infra"
 	"crud-with-cache/router"
 )
@@ -16,9 +15,11 @@ func NewInitializer(infra *Infra, router router.Router) *Initializer {
 	return &Initializer{infra: infra, Router: router}
 }
 
-func (i *Initializer) InitCommentService() {
-	mysqlRepo := commentinfra.NewMySQLRepository(i.infra.RDB)
-	redisBuffer := commentinfra.NewBuffer(mysqlRepo, i.infra.Buffer)
-	useCase := commentdomain.NewCommentUseCase(redisBuffer)
-	commentcontroller.NewCommentController(i.Router, useCase)
+func (i *Initializer) InitCommentBuffer() {
+	mysqlRepo := commentinfra.NewBufferRepository(i.infra.RDB)
+	redisBuffer := commentinfra.NewSubscriberBuffer(mysqlRepo, i.infra.Buffer)
+	err := redisBuffer.WaitForMessage(context.Background())
+	if err != nil {
+		panic(err)
+	}
 }
