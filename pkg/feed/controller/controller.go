@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"crud-with-cache/pkg/feedsvc/domain"
+	"crud-with-cache/pkg/feed/domain"
 	"crud-with-cache/router"
 	"net/http"
 

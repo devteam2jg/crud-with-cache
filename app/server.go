@@ -15,6 +15,7 @@ type Server struct {
 func (s Server) RegisterRouter(router router.Router) {
 	Initializer := NewInitializer(s.Infra, router)
 	Initializer.InitFeedService()
+	Initializer.InitCommentService()
 }
 
 func MiddlewareInitializer(i *Infra) {

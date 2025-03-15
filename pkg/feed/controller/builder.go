@@ -1,6 +1,6 @@
 package controller
 
-import "crud-with-cache/pkg/feedsvc/domain"
+import "crud-with-cache/pkg/feed/domain"
 
 type controllerDtoBuilder interface {
 	BuildGetFeedsResponse(feeds []domain.Feed) getFeedsResponse

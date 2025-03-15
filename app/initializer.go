@@ -1,9 +1,12 @@
 package app
 
 import (
-	feedcontroller "crud-with-cache/pkg/feedsvc/controller"
-	feeddomain "crud-with-cache/pkg/feedsvc/domain"
-	feedinfra "crud-with-cache/pkg/feedsvc/infra"
+	commentcontroller "crud-with-cache/pkg/comment/controller"
+	commentdomain "crud-with-cache/pkg/comment/domain"
+	commentinfra "crud-with-cache/pkg/comment/infra"
+	feedcontroller "crud-with-cache/pkg/feed/controller"
+	feeddomain "crud-with-cache/pkg/feed/domain"
+	feedinfra "crud-with-cache/pkg/feed/infra"
 	"crud-with-cache/router"
 )
 
@@ -17,8 +20,14 @@ func NewInitializer(infra *Infra, router router.Router) *Initializer {
 }
 
 func (i *Initializer) InitFeedService() {
-	mysqlRepo := feedinfra.NewFeedMySQLRepository(i.infra.RDB)
-	cacheRepo := feedinfra.NewFeedCache(mysqlRepo, i.infra.Redis)
+	mysqlRepo := feedinfra.NewMySQLRepository(i.infra.RDB)
+	cacheRepo := feedinfra.NewCache(mysqlRepo, i.infra.Redis)
 	useCase := feeddomain.NewFeedUseCase(cacheRepo)
 	feedcontroller.NewFeedController(i.Router, useCase)
+}
+
+func (i *Initializer) InitCommentService() {
+	mysqlRepo := commentinfra.NewMySQLRepository(i.infra.RDB)
+	useCase := commentdomain.NewCommentUseCase(mysqlRepo)
+	commentcontroller.NewCommentController(i.Router, useCase)
 }
