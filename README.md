@@ -31,6 +31,8 @@
 ## Infra Architecture
 ![aaaaa](https://github.com/user-attachments/assets/878d4e1a-410c-4fcc-bcf0-9e50daf50bef)
 
+## Result
+
 
 ## Build
 ```Makefile
@@ -38,6 +40,13 @@
 make init-dotenv    # Set env
 make up    # Init application
 ```
+## Test
+아래 URL을 이용해 테스트 가능 
++ [게시글 작성](http://localhost:8080/api/feed/test)   
++ [게시글 조회](http://localhost:8080/api/user/1/feeds)
++ [댓글 작성](http://localhost:8080/api/comment/test)
++ [댓글 조회](http://localhost:8080/api/feed/1/comments)
+
 
 
 ## API Spec
@@ -101,10 +110,3 @@ make up    # Init application
       ```
 + **GET** /api/comment/test
   + 테스트 댓글 작성
-
-## Test
-아래 URL을 이용해 테스트 가능 
-+ [게시글 작성](http://localhost:8080/api/feed/test)   
-+ [게시글 조회](http://localhost:8080/api/user/1/feeds)
-+ [댓글 작성](http://localhost:8080/api/comment/test)
-+ [댓글 조회](http://localhost:8080/api/feed/1/comments)
