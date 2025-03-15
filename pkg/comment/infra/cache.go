@@ -2,6 +2,7 @@ package infra
 
 import (
 	c "context"
+	"time"
 
 	"bytes"
 	"encoding/gob"
@@ -10,6 +11,10 @@ import (
 	"github.com/redis/go-redis/v9"
 
 	"crud-with-cache/pkg/comment/domain"
+)
+
+const (
+	cacheTTL = 10 * time.Second
 )
 
 type redisCache struct {
@@ -27,6 +32,7 @@ func NewCache(repo domain.CommentRepository, redis redis.UniversalClient) domain
 func (c *redisCache) FindComments(ctx c.Context, feedID uint16) ([]domain.Comment, error) {
 	key := c.makeKey(feedID)
 	if cached := c.fetch(ctx, key); cached != nil {
+		fmt.Println("Cache hit")
 		return cached, nil
 	}
 	comments, e := c.CommentRepository.FindComments(ctx, feedID)
@@ -34,6 +40,7 @@ func (c *redisCache) FindComments(ctx c.Context, feedID uint16) ([]domain.Commen
 		return nil, e
 	}
 	c.store(ctx, key, comments)
+	fmt.Println("Cache miss")
 	return comments, nil
 }
 

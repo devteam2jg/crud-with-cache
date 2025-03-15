@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	cacheTTL      = 10 * time.Second
+	bufferTTL     = time.Hour
 	bufferChannel = "comment"
 )
 
@@ -37,8 +37,8 @@ func NewSubscriberBuffer(repo domain.CommentRepository, buffer redis.UniversalCl
 }
 
 func (r *redisBuffer) InsertComment(ctx c.Context, comment domain.Comment) error {
-	r.buffer(ctx, r.makeKey(comment.FeedID, comment.OwnerID, time.Now()), comment)
-	fmt.Println("Comment buffered")
+	key := r.makeKey(comment.FeedID, comment.OwnerID, time.Now())
+	r.buffer(ctx, key, comment)
 	return nil
 }
 
@@ -46,17 +46,17 @@ func (r *redisBuffer) buffer(ctx c.Context, key string, e domain.Comment) {
 	var buf bytes.Buffer
 	if err := gob.NewEncoder(&buf).Encode(e); err != nil {
 		//todo log error
-		fmt.Println("Error encoding comment %s", err.Error())
 		return
 	}
-	if err := r.redis.Set(ctx, key, buf.Bytes(), cacheTTL).Err(); err != nil {
-		fmt.Println("Error buffering comment %s", err.Error())
+	if err := r.redis.Set(ctx, key, buf.Bytes(), bufferTTL).Err(); err != nil {
+		//todo log error
+		return
 	}
 	if err := r.redis.Publish(ctx, bufferChannel, key).Err(); err != nil {
 		//todo log error
-		fmt.Println("Error publishing comment %s", err.Error())
 		return
 	}
+	fmt.Printf("Comment buffered, key: %s\n", key)
 }
 
 func (r *redisBuffer) WaitForMessage(ctx c.Context) error {
@@ -79,7 +79,7 @@ func (r *redisBuffer) WaitForMessage(ctx c.Context) error {
 			array = append(array, key)
 			fmt.Println("Message Received: ", key)
 			if len(array) >= 100 {
-				fmt.Println("timer event : Migration to DB")
+				fmt.Println("array is fulled: Migration to DB")
 				r.migrationToDB(ctx, array)
 				array = array[:0]
 				timer.Reset(5 * time.Second)
@@ -115,6 +115,7 @@ func (r *redisBuffer) migrationToDB(ctx c.Context, messages []string) {
 	if err := r.CommentRepository.InsertCommentWithTransAction(ctx, a); err != nil {
 		//todo retry
 	}
+	fmt.Println("Migration to DB done")
 }
 
 func (r *redisBuffer) makeKey(feedID uint16, userID uint16, bufferedAt time.Time) string {
