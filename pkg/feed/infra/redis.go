@@ -3,7 +3,7 @@ package infra
 import (
 	"bytes"
 	"context"
-	"crud-with-cache/pkg/feedsvc/domain"
+	"crud-with-cache/pkg/feed/domain"
 	"encoding/gob"
 	"errors"
 	"fmt"
@@ -16,7 +16,7 @@ type cache struct {
 	redis redis.UniversalClient
 }
 
-func NewFeedCache(repo domain.FeedRepository, redis redis.UniversalClient) domain.FeedRepository {
+func NewCache(repo domain.FeedRepository, redis redis.UniversalClient) domain.FeedRepository {
 	return &cache{
 		FeedRepository: repo,
 		redis:          redis,

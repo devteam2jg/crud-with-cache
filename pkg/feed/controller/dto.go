@@ -1,6 +1,6 @@
 package controller
 
-import "crud-with-cache/pkg/feedsvc/domain"
+import "crud-with-cache/pkg/feed/domain"
 
 type feedDtoBase struct {
 	userID uint16 `param:"user_id"`

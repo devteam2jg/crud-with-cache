@@ -2,13 +2,13 @@ package infra
 
 import (
 	"context"
-	"crud-with-cache/pkg/feedsvc/domain"
+	"crud-with-cache/pkg/feed/domain"
 	"errors"
 
 	"gorm.io/gorm"
 )
 
-func NewFeedMySQLRepository(db *gorm.DB) domain.FeedRepository {
+func NewMySQLRepository(db *gorm.DB) domain.FeedRepository {
 	return &mysqlRepo{db: db}
 }
 
