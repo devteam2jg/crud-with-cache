@@ -51,7 +51,7 @@ make up    # Init application
     {   
         "title" : "string",
         "content": "string",
-        "image_urls": ["string"]
+        "image_urls": "string"
     }
     ```
 + **PUT** /api/user/{user_id}/feed/{feed_id}
@@ -61,7 +61,7 @@ make up    # Init application
     {   
         "title" : "string",
         "content": "string",
-        "image_urls": ["string"]
+        "image_urls": "string"
     }
     ```
 + **DELETE** /api/user/{user_id}/feed/{feed_id}
