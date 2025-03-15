@@ -6,7 +6,7 @@ include:
   - infra.yml
 
 services:
-  app:
+  crud:
     working_dir: /app
     build:
       context: ..
@@ -19,6 +19,28 @@ services:
     volumes:
       - "..:/app:delegated"
     command: air -build.poll true -c ./app/crud/main/.air.toml
+    depends_on:
+      mysql:
+        condition: service_healthy
+      cache:
+        condition: service_started
+      buffer:
+        condition: service_started
+      subscriber:
+        condition: service_started
+  subscriber:
+    working_dir: /app
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    restart: always
+    networks:
+      - app_network
+    volumes:
+      - "..:/app:delegated"
+    command: air -build.poll true -c ./app/subscriber/main/.air.toml
     depends_on:
       mysql:
         condition: service_healthy

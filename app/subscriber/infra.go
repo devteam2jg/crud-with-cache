@@ -1,7 +1,8 @@
-package crud
+package subscriber
 
 import (
 	"context"
+
 	"crud-with-cache/config"
 	"errors"
 	"fmt"
@@ -13,7 +14,6 @@ import (
 
 type Infra struct {
 	RDB    *gorm.DB
-	Cache  redis.UniversalClient
 	Buffer redis.UniversalClient
 }
 
@@ -27,14 +27,6 @@ func NewInfra(cfg *config.Config) (*Infra, error) {
 		return nil, errors.Join(fmt.Errorf("failed to connect to mysql"), err)
 	}
 
-	cache := redis.NewClient(&redis.Options{
-		Addr: fmt.Sprintf("%s:%d", cfg.Cached.Host, cfg.Cached.Port),
-	})
-	_, err = cache.Ping(context.Background()).Result()
-	if err != nil {
-		return nil, errors.Join(fmt.Errorf("failed to connect to redis buffer"), err)
-	}
-
 	buffer := redis.NewClient(&redis.Options{
 		Addr: fmt.Sprintf("%s:%d", cfg.Buffer.Host, cfg.Buffer.Port),
 	})
@@ -45,7 +37,6 @@ func NewInfra(cfg *config.Config) (*Infra, error) {
 
 	return &Infra{
 		RDB:    rdb,
-		Cache:  cache,
 		Buffer: buffer,
 	}, nil
 }
