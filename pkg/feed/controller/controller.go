@@ -26,7 +26,7 @@ func NewFeedController(e router.Router, feedUseCase domain.FeedUseCase) FeedCont
 	e.PUT("/api/user/:user_id/feed", ctrl.UpdateFeed)
 	e.DELETE("/api/user/:user_id/feed", ctrl.DeleteFeed)
 
-	e.POST("/api/comment/test", ctrl.testFeed)
+	e.GET("/api/comment/test", ctrl.testFeed)
 
 	return ctrl
 }

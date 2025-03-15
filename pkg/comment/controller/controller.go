@@ -31,7 +31,7 @@ func NewCommentController(e router.Router, useCase domain.CommentUseCase) Commen
 	e.PUT("/api/feed/:feed_id/comment/:comment_id", ctrl.PutComment)
 	e.DELETE("/api/feed/:feed_id/comment/:comment_id", ctrl.DeleteComment)
 
-	e.POST("/api/comment/test", ctrl.testComment)
+	e.GET("/api/comment/test", ctrl.testComment)
 	return ctrl
 }
 

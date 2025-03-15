@@ -67,7 +67,7 @@ make up    # Init application
 + **DELETE** /api/user/{user_id}/feed/{feed_id}
     + 게시글 삭제
 
-+ **POST** /api/feed/test
++ **GET** /api/feed/test
     + 테스트 게시글 작성
     
 ### Comment
@@ -99,7 +99,7 @@ make up    # Init application
           "user_id" : "string"
       }
       ```
-+ **POST** /api/comment/test
++ **GET** /api/comment/test
   + 테스트 댓글 작성
 
 ## Test
