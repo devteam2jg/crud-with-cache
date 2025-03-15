@@ -47,14 +47,15 @@ func (r *redisBuffer) buffer(ctx c.Context, key string, e domain.Comment) {
 	var buf bytes.Buffer
 	if err := gob.NewEncoder(&buf).Encode(e); err != nil {
 		//todo log error
+		fmt.Println("Error encoding comment %s", err.Error())
 		return
 	}
-	if err := r.redis.Set(ctx, key, buf.Bytes(), cacheTTL); err != nil {
-		//todo log error
-		return
+	if err := r.redis.Set(ctx, key, buf.Bytes(), cacheTTL).Err(); err != nil {
+		fmt.Println("Error buffering comment %s", err.Error())
 	}
 	if err := r.redis.Publish(ctx, bufferChannel, key).Err(); err != nil {
 		//todo log error
+		fmt.Println("Error publishing comment %s", err.Error())
 		return
 	}
 }
