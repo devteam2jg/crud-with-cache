@@ -20,5 +20,7 @@ services:
       - "..:/app:delegated"
     command: air -build.poll true
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
