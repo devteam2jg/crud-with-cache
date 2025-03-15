@@ -16,3 +16,6 @@ up-app:
 
 down:
 	docker compose -f compose/local.yml down --remove-orphans
+
+down-volume:
+  docker compose -f compose/local.yml down -v --remove-orphans
