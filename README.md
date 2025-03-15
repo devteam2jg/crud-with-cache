@@ -29,7 +29,8 @@
 + 새롭게 추가된 Comment들은 기존 Comment cache 만료 시 사용자에게 노출됨
 
 ## Infra Architecture
-![aaaaa](https://github.com/user-attachments/assets/4ff04102-a4b2-4a19-8d4f-f010ddbd683e)
+![aaaaa](https://github.com/user-attachments/assets/878d4e1a-410c-4fcc-bcf0-9e50daf50bef)
+
 
 ## Build
 ```Makefile
