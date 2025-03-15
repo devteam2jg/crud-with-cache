@@ -46,13 +46,24 @@ services:
       retries: 5
       start_period: 30s
 
-  redis:
+  cache:
     image: redis:7.2
-    container_name: redis
+    container_name: cache
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
+      - redis_cache_data:/data
+    restart: always
+    networks:
+      - app_network
+
+  buffer:
+    image: redis:7.2
+    container_name: buffer
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_buffer_data:/data
     restart: always
     networks:
       - app_network
@@ -63,4 +74,5 @@ networks:
 
 volumes:
   mysql_data:
-  redis_data:
+  redis_cache_data:
+  redis_buffer_data:
