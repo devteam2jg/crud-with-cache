@@ -3,6 +3,7 @@ package controller
 import (
 	"crud-with-cache/pkg/feed/domain"
 	"crud-with-cache/router"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -40,10 +41,11 @@ func (con *controller) GetFeeds(c echo.Context) error {
 	ctx := c.Request().Context()
 	binder := echo.DefaultBinder{}
 	req := &feedDtoBase{}
-	if err := binder.BindPathParams(c, req); err != nil {
+	if err := binder.Bind(req, c); err != nil {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Invalid request"}
 	}
-	feeds, err := con.feedUseCase.GetFeeds(ctx, req.userID)
+	fmt.Println("req.userID", req.UserID)
+	feeds, err := con.feedUseCase.GetFeeds(ctx, uint16(req.UserID))
 	if err != nil {
 		//todo: log error
 		return &echo.HTTPError{Code: http.StatusInternalServerError, Message: "Unexpected error: failed to get feeds"}
@@ -55,10 +57,10 @@ func (con *controller) CreateFeed(c echo.Context) error {
 	ctx := c.Request().Context()
 	binder := echo.DefaultBinder{}
 	req := &feedDtoBase{}
-	if err := binder.BindPathParams(c, req); err != nil {
+	if err := binder.Bind(req, c); err != nil {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Invalid request"}
 	}
-	if err := con.feedUseCase.CreateFeed(ctx, domain.Feed{UserID: req.userID}); err != nil {
+	if err := con.feedUseCase.CreateFeed(ctx, domain.Feed{UserID: uint16(req.UserID)}); err != nil {
 		return &echo.HTTPError{Code: http.StatusInternalServerError, Message: "Unexpected error: failed to create feed"}
 	}
 	return c.NoContent(http.StatusNoContent)
@@ -68,10 +70,10 @@ func (con *controller) UpdateFeed(c echo.Context) error {
 	ctx := c.Request().Context()
 	binder := echo.DefaultBinder{}
 	req := &feedDtoBase{}
-	if err := binder.BindPathParams(c, req); err != nil {
+	if err := binder.Bind(req, c); err != nil {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Invalid request"}
 	}
-	if err := con.feedUseCase.UpdateFeed(ctx, domain.Feed{UserID: req.userID}); err != nil {
+	if err := con.feedUseCase.UpdateFeed(ctx, domain.Feed{UserID: uint16(req.UserID)}); err != nil {
 		return &echo.HTTPError{Code: http.StatusInternalServerError, Message: "Unexpected error: failed to update feed"}
 	}
 	return c.NoContent(http.StatusNoContent)
@@ -81,10 +83,10 @@ func (con *controller) DeleteFeed(c echo.Context) error {
 	ctx := c.Request().Context()
 	binder := echo.DefaultBinder{}
 	req := &feedDtoBase{}
-	if err := binder.BindPathParams(c, req); err != nil {
+	if err := binder.Bind(req, c); err != nil {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Invalid request"}
 	}
-	if err := con.feedUseCase.DeleteFeed(ctx, req.userID); err != nil {
+	if err := con.feedUseCase.DeleteFeed(ctx, uint16(req.UserID)); err != nil {
 		return &echo.HTTPError{Code: http.StatusInternalServerError, Message: "Unexpected error: failed to delete feed"}
 	}
 	return c.NoContent(http.StatusNoContent)
@@ -96,7 +98,7 @@ func (con *controller) testFeed(c echo.Context) error {
 		UserID:  1,
 		Title:   "test",
 		Content: "test",
-		ImgURL:  []string{"test"},
+		ImgURL:  "test",
 	}); err != nil {
 		return &echo.HTTPError{Code: http.StatusInternalServerError,
 			Message: "Unexpected error: failed to post comment"}

@@ -17,11 +17,11 @@ type mysqlRepo struct {
 }
 
 type Feed struct {
-	ID      uint16   `gorm:"primaryKey;column:id"`
-	UserID  uint16   `gorm:"column:user_id"`
-	Title   string   `gorm:"column:title"`
-	Content string   `gorm:"column:content"`
-	ImgURL  []string `gorm:"column:img_url"`
+	ID      uint16 `gorm:"primaryKey;column:id"`
+	UserID  uint16 `gorm:"column:owner_id"`
+	Title   string `gorm:"column:title"`
+	Content string `gorm:"column:content"`
+	ImgURL  string `gorm:"type:text;column:img_urls"`
 }
 
 func toEntities(records []Feed) []domain.Feed {
@@ -39,7 +39,7 @@ func toEntities(records []Feed) []domain.Feed {
 }
 
 func (Feed) TableName() string {
-	return "feeds"
+	return "feed"
 }
 
 func (f Feed) toEntity() *domain.Feed {
@@ -65,7 +65,7 @@ func (r *mysqlRepo) FindOneByID(ctx context.Context, id uint16) (*domain.Feed, e
 
 func (r *mysqlRepo) FindAllByUserID(ctx context.Context, userID uint16) ([]domain.Feed, error) {
 	var records []Feed
-	if err := r.db.WithContext(ctx).Where("user_id = ?", userID).Find(&records).Error; err != nil {
+	if err := r.db.WithContext(ctx).Where("owner_id = ?", userID).Find(&records).Error; err != nil {
 		return nil, err
 	}
 	return toEntities(records), nil
