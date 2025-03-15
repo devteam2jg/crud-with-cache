@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
-	"time"
 
 	"github.com/redis/go-redis/v9"
 
@@ -26,7 +25,7 @@ func NewCache(repo domain.CommentRepository, redis redis.UniversalClient) domain
 }
 
 func (c *redisCache) FindComments(ctx c.Context, feedID uint16) ([]domain.Comment, error) {
-	key := fmt.Sprintf("feed:%d:comments", feedID)
+	key := c.makeKey(feedID)
 	if cached := c.fetch(ctx, key); cached != nil {
 		return cached, nil
 	}
@@ -57,5 +56,9 @@ func (c *redisCache) store(ctx c.Context, key string, comments []domain.Comment)
 	if err := enc.Encode(comments); err != nil {
 		//todo log error
 	}
-	c.redis.Set(ctx, key, buf.Bytes(), time.Minute)
+	c.redis.Set(ctx, key, buf.Bytes(), cacheTTL)
+}
+
+func (c *redisCache) makeKey(feedID uint16) string {
+	return fmt.Sprintf("feed:%d:comments", feedID)
 }

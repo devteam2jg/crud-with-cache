@@ -13,13 +13,12 @@ import (
 )
 
 const (
-	cacheTTL      = time.Hour
+	cacheTTL      = 10 * time.Second
 	bufferChannel = "comment"
 )
 
 type redisBuffer struct {
 	domain.CommentRepository
-	domain.BufferRepository
 	redis redis.UniversalClient
 }
 
@@ -30,10 +29,10 @@ func NewBuffer(repo domain.CommentRepository, buffer redis.UniversalClient) doma
 	}
 }
 
-func NewSubscriberBuffer(repo domain.BufferRepository, buffer redis.UniversalClient) domain.Subscriber {
+func NewSubscriberBuffer(repo domain.CommentRepository, buffer redis.UniversalClient) domain.Subscriber {
 	return &redisBuffer{
-		BufferRepository: repo,
-		redis:            buffer,
+		CommentRepository: repo,
+		redis:             buffer,
 	}
 }
 
@@ -68,6 +67,13 @@ func (r *redisBuffer) WaitForMessage(ctx c.Context) error {
 	fmt.Println("Waiting for message")
 	for {
 		select {
+		case <-timer.C:
+			if len(array) > 0 {
+				fmt.Println("timer event : Migration to DB")
+				r.migrationToDB(ctx, array)
+				array = array[:0]
+			}
+			timer.Reset(5 * time.Second)
 		case msg := <-ch:
 			key := msg.Payload
 			array = append(array, key)
@@ -83,13 +89,6 @@ func (r *redisBuffer) WaitForMessage(ctx c.Context) error {
 				}
 				timer.Reset(5 * time.Second)
 			}
-		case <-timer.C:
-			if len(array) > 0 {
-				fmt.Println("timer event : Migration to DB")
-				r.migrationToDB(ctx, array)
-				array = array[:0]
-			}
-			timer.Reset(5 * time.Second)
 		case <-ctx.Done():
 			return sub.Close()
 		}
@@ -110,9 +109,10 @@ func (r *redisBuffer) migrationToDB(ctx c.Context, messages []string) {
 			//todo log error
 			continue
 		}
+		r.redis.Del(ctx, key)
 		a = append(a, e)
 	}
-	if err := r.BufferRepository.InsertCommentWithTransAction(ctx, a); err != nil {
+	if err := r.CommentRepository.InsertCommentWithTransAction(ctx, a); err != nil {
 		//todo retry
 	}
 }

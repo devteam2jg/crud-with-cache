@@ -45,12 +45,6 @@ func NewMySQLRepository(db *gorm.DB) domain.CommentRepository {
 	}
 }
 
-func NewBufferRepository(db *gorm.DB) domain.BufferRepository {
-	return &mysqlRepo{
-		db: db,
-	}
-}
-
 func (r *mysqlRepo) FindComments(ctx c.Context, feedID uint16) ([]domain.Comment, error) {
 	var records []Comment
 	err := r.db.WithContext(ctx).Where("feed_id = ?", feedID).Find(&records).Error

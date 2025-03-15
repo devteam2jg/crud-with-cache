@@ -16,7 +16,7 @@ func NewInitializer(infra *Infra, router router.Router) *Initializer {
 }
 
 func (i *Initializer) InitCommentBuffer() {
-	mysqlRepo := commentinfra.NewBufferRepository(i.infra.RDB)
+	mysqlRepo := commentinfra.NewMySQLRepository(i.infra.RDB)
 	redisBuffer := commentinfra.NewSubscriberBuffer(mysqlRepo, i.infra.Buffer)
 	err := redisBuffer.WaitForMessage(context.Background())
 	if err != nil {

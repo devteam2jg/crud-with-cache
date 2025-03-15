@@ -9,9 +9,6 @@ type CommentRepository interface {
 	InsertComment(ctx c.Context, e Comment) error
 	UpdateComment(ctx c.Context, e Comment) error
 	DeleteComment(ctx c.Context, e Comment) error
-}
-
-type BufferRepository interface {
 	InsertCommentWithTransAction(ctx c.Context, e []Comment) error
 }
 
